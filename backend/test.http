@@ -1,0 +1,201 @@
+### CSDLPT API Testing
+### Variables
+@baseUrl = http://localhost:5000
+@contentType = application/json
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc3Mjc4NDc4NSwianRpIjoiMzE0ZmYzNDgtMDg4OS00MjVlLTllYzctYWRmNzM3MTMxZmE2IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6ImFkbWluIiwibmJmIjoxNzcyNzg0Nzg1LCJleHAiOjE3NzI4NzExODUsInJvbGUiOiJhZG1pbiJ9.D25g8aRXAAhwPMntndMTVQc3WU4EBsrc-Ccerae-cII
+###
+### 1. LOGIN - ADMIN
+### Lấy token cho admin user
+POST {{baseUrl}}/api/auth/login
+Content-Type: {{contentType}}
+
+{
+  "username": "admin",
+  "password": "admin123"
+}
+
+###
+### 2. LOGIN - KẾ TOÁN
+POST {{baseUrl}}/api/auth/login
+Content-Type: {{contentType}}
+
+{
+  "username": "ketoan",
+  "password": "ketoan123"
+}
+
+###
+### 3. GET USER INFO
+GET {{baseUrl}}/api/auth/me
+Authorization: Bearer {{token}}
+
+###
+### ========== NHÂN VIÊN ==========
+
+###
+### 4. LẤY DANH SÁCH NHÂN VIÊN
+GET {{baseUrl}}/api/nhanvien?page=1&limit=20&trangThai=1
+Authorization: Bearer {{token}}
+
+###
+### 5. LẤY CHI TIẾT NHÂN VIÊN (ID: 1)
+GET {{baseUrl}}/api/nhanvien/1
+Authorization: Bearer {{token}}
+
+###
+### 6. THÊM NHÂN VIÊN MỚI
+POST {{baseUrl}}/api/nhanvien
+Authorization: Bearer {{token}}
+Content-Type: {{contentType}}
+
+{
+  "tenNV": "Trần Văn Test",
+  "ngaySinh": "1998-05-15",
+  "gioiTinh": "Nam",
+  "diaChi": "456 Đường XYZ, TP HCM",
+  "sdt": "0912345678",
+  "email": "tranvantesst@company.com",
+  "maPhong": 1,
+  "maChucVu": 3,
+  "ngayVaoLam": "2024-01-01"
+}
+
+###
+### 7. CẬP NHẬT NHÂN VIÊN (ID: 1)
+PUT {{baseUrl}}/api/nhanvien/1
+Authorization: Bearer {{token}}
+Content-Type: {{contentType}}
+
+{
+  "tenNV": "Nguyễn Văn A - Updated",
+  "diaChi": "999 Đường Mới",
+  "sdt": "0987654321"
+}
+
+###
+### 8. XÓA NHÂN VIÊN (ID: 1)
+DELETE {{baseUrl}}/api/nhanvien/1
+Authorization: Bearer {{token}}
+
+###
+### ========== LƯƠNG ==========
+
+###
+### 9. LẤY BẢNG LƯƠNG (MaNV: 1)
+GET {{baseUrl}}/api/luong/1
+Authorization: Bearer {{token}}
+
+###
+### 10. CẬP NHẬT BẢNG LƯƠNG (MaNV: 1)
+PUT {{baseUrl}}/api/luong/1
+Authorization: Bearer {{token}}
+Content-Type: {{contentType}}
+
+{
+  "luongCoBan": 5500000,
+  "heSoLuong": 1.05,
+  "phuCapChucVu": 550000,
+  "phuCapPhongBan": 300000,
+  "ngayApDung": "2024-03-01"
+}
+
+###
+### 11. TÍNH LƯƠNG CHO TẤT CẢ NHÂN VIÊN
+POST {{baseUrl}}/api/luong/chi-tiet
+Authorization: Bearer {{token}}
+Content-Type: {{contentType}}
+
+{
+  "thang": 3,
+  "nam": 2026
+}
+
+###
+### 12. TÍNH LƯƠNG CHO 1 NHÂN VIÊN (MaNV: 1)
+POST {{baseUrl}}/api/luong/chi-tiet
+Authorization: Bearer {{token}}
+Content-Type: {{contentType}}
+
+{
+  "thang": 3,
+  "nam": 2026,
+  "maNV": 1
+}
+
+###
+### 13. LẤY CHI TIẾT LƯƠNG THÁNG (MaNV: 1, Tháng: 3, Năm: 2026)
+GET {{baseUrl}}/api/luong/chi-tiet/1?thang=3&nam=2026
+Authorization: Bearer {{token}}
+
+###
+### 14. LẤY DANH SÁCH LƯƠNG THÁNG 3/2026
+GET {{baseUrl}}/api/luong/danh-sach?thang=3&nam=2026
+Authorization: Bearer {{token}}
+
+###
+### ========== PHÒNG BAN ==========
+
+###
+### 15. LẤY DANH SÁCH PHÒNG BAN
+GET {{baseUrl}}/api/phongban
+Authorization: Bearer {{token}}
+
+###
+### 16. LẤY CHI TIẾT PHÒNG BAN (MaPhong: 1)
+GET {{baseUrl}}/api/phongban/1
+Authorization: Bearer {{token}}
+
+###
+### 17. THÊM PHÒNG BAN MỚI
+POST {{baseUrl}}/api/phongban
+Authorization: Bearer {{token}}
+Content-Type: {{contentType}}
+
+{
+  "tenPhong": "Cloud Infrastructure",
+  "truongPhong": "Lê Văn C"
+}
+
+###
+### 18. CẬP NHẬT PHÒNG BAN (MaPhong: 1)
+PUT {{baseUrl}}/api/phongban/1
+Authorization: Bearer {{token}}
+Content-Type: {{contentType}}
+
+{
+  "tenPhong": "Kỹ Thuật - Updated",
+  "truongPhong": "Nguyễn Văn A"
+}
+
+###
+### ========== CHỨC VỤ ==========
+
+###
+### 19. LẤY DANH SÁCH CHỨC VỤ
+GET {{baseUrl}}/api/chucvu
+Authorization: Bearer {{token}}
+
+###
+### 20. LẤY CHI TIẾT CHỨC VỤ (MaChucVu: 1)
+GET {{baseUrl}}/api/chucvu/1
+Authorization: Bearer {{token}}
+
+###
+### 21. THÊM CHỨC VỤ MỚI
+POST {{baseUrl}}/api/chucvu
+Authorization: Bearer {{token}}
+Content-Type: {{contentType}}
+
+{
+  "tenChucVu": "DevOps Engineer"
+}
+
+###
+### 22. CẬP NHẬT CHỨC VỤ (MaChucVu: 1)
+PUT {{baseUrl}}/api/chucvu/1
+Authorization: Bearer {{token}}
+Content-Type: {{contentType}}
+
+{
+  "tenChucVu": "Giám đốc - Updated"
+}

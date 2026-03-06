@@ -1,0 +1,516 @@
+{
+  "info": {
+    "_postman_id": "csdlpt-payroll-api",
+    "name": "CSDLPT - Payroll Management API",
+    "description": "API for Payroll & Employee Management System",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Login - Admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.environment.set('token', jsonData.token);",
+                  "    pm.environment.set('username', jsonData.user.username);",
+                  "    pm.environment.set('role', jsonData.user.role);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"admin\",\n    \"password\": \"admin123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Login - Kế Toán",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.environment.set('token', jsonData.token);",
+                  "    pm.environment.set('username', jsonData.user.username);",
+                  "    pm.environment.set('role', jsonData.user.role);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"ketoan\",\n    \"password\": \"ketoan123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Get User Info",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/me",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "me"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Nhân Viên",
+      "item": [
+        {
+          "name": "Lấy Danh Sách",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/nhanvien?page=1&limit=20&trangThai=1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "nhanvien"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                },
+                {
+                  "key": "trangThai",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Lấy Chi Tiết (ID: 1)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/nhanvien/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "nhanvien", "1"]
+            }
+          }
+        },
+        {
+          "name": "Thêm Nhân Viên",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"tenNV\": \"Nguyễn Thị Test\",\n    \"ngaySinh\": \"2000-01-15\",\n    \"gioiTinh\": \"Nữ\",\n    \"diaChi\": \"123 Đường Test, TP HCM\",\n    \"sdt\": \"0987654321\",\n    \"email\": \"test@company.com\",\n    \"maPhong\": 1,\n    \"maChucVu\": 3,\n    \"ngayVaoLam\": \"2024-01-01\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/nhanvien",
+              "host": ["{{base_url}}"],
+              "path": ["api", "nhanvien"]
+            }
+          }
+        },
+        {
+          "name": "Cập Nhật Nhân Viên (ID: 1)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"tenNV\": \"Nguyễn Văn A Updated\",\n    \"diaChi\": \"999 Đường Mới\",\n    \"trangThai\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/nhanvien/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "nhanvien", "1"]
+            }
+          }
+        },
+        {
+          "name": "Xóa Nhân Viên (ID: 1)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/nhanvien/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "nhanvien", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Lương",
+      "item": [
+        {
+          "name": "Lấy Bảng Lương (MaNV: 1)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/luong/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "luong", "1"]
+            }
+          }
+        },
+        {
+          "name": "Cập Nhật Bảng Lương (MaNV: 1)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"luongCoBan\": 5500000,\n    \"heSoLuong\": 1.05,\n    \"phuCapChucVu\": 550000,\n    \"phuCapPhongBan\": 300000,\n    \"ngayApDung\": \"2024-03-01\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/luong/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "luong", "1"]
+            }
+          }
+        },
+        {
+          "name": "Tính Lương Tháng (Tất cả)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"thang\": 3,\n    \"nam\": 2026\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/luong/chi-tiet",
+              "host": ["{{base_url}}"],
+              "path": ["api", "luong", "chi-tiet"]
+            }
+          }
+        },
+        {
+          "name": "Tính Lương Cho 1 Nhân Viên",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"thang\": 3,\n    \"nam\": 2026,\n    \"maNV\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/luong/chi-tiet",
+              "host": ["{{base_url}}"],
+              "path": ["api", "luong", "chi-tiet"]
+            }
+          }
+        },
+        {
+          "name": "Lấy Chi Tiết Lương (MaNV: 1)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/luong/chi-tiet/1?thang=3&nam=2026",
+              "host": ["{{base_url}}"],
+              "path": ["api", "luong", "chi-tiet", "1"],
+              "query": [
+                {
+                  "key": "thang",
+                  "value": "3"
+                },
+                {
+                  "key": "nam",
+                  "value": "2026"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Lấy Danh Sách Lương Tháng",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/luong/danh-sach?thang=3&nam=2026",
+              "host": ["{{base_url}}"],
+              "path": ["api", "luong", "danh-sach"],
+              "query": [
+                {
+                  "key": "thang",
+                  "value": "3"
+                },
+                {
+                  "key": "nam",
+                  "value": "2026"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Phòng Ban",
+      "item": [
+        {
+          "name": "Lấy Danh Sách",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/phongban",
+              "host": ["{{base_url}}"],
+              "path": ["api", "phongban"]
+            }
+          }
+        },
+        {
+          "name": "Thêm Phòng Ban",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"tenPhong\": \"IT Operations\",\n    \"truongPhong\": \"Nguyễn Văn A\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/phongban",
+              "host": ["{{base_url}}"],
+              "path": ["api", "phongban"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Chức Vụ",
+      "item": [
+        {
+          "name": "Lấy Danh Sách",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/chucvu",
+              "host": ["{{base_url}}"],
+              "path": ["api", "chucvu"]
+            }
+          }
+        },
+        {
+          "name": "Thêm Chức Vụ",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"tenChucVu\": \"Senior Developer\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/chucvu",
+              "host": ["{{base_url}}"],
+              "path": ["api", "chucvu"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:5000",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "username",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "role",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}
