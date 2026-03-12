@@ -220,6 +220,33 @@ CREATE INDEX idx_NhanVien_TrangThai ON NhanVien(TrangThai);
 -- GRANTS & PHÂN QUYỀN (tùy chỉnh theo database user)
 -- =====================================================
 
+-- =====================================================
+-- THIẾT LẬP BẢO MẬT VÀ PHÂN QUYỀN (Yêu cầu 4)
+-- =====================================================
+
+-- 1. Xóa user cũ nếu đã tồn tại (để chạy lại script không lỗi)
+DROP USER IF EXISTS 'user_nhanvien'@'localhost';
+DROP USER IF EXISTS 'user_ketoan'@'localhost';
+
+-- 2. Tạo User mới
+CREATE USER 'user_nhanvien'@'localhost' IDENTIFIED BY 'NhanVien@123';
+CREATE USER 'user_ketoan'@'localhost' IDENTIFIED BY 'KeToan@456';
+
+-- 3. Phân quyền cho User NHÂN VIÊN
+-- Chỉ được SELECT trên DB nhân sự, không thấy DB lương
+GRANT SELECT ON DB1_NHANSU.* TO 'user_nhanvien'@'localhost';
+
+-- 4. Phân quyền cho User KẾ TOÁN
+-- Được xem nhân sự và quản lý toàn bộ DB lương
+GRANT SELECT ON DB1_NHANSU.* TO 'user_ketoan'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON DB2_LUONG.* TO 'user_ketoan'@'localhost';
+
+-- 5. Cấp quyền thực thi các Procedure (Nếu cần)
+GRANT EXECUTE ON PROCEDURE DB2_LUONG.sp_TinhLuongThang TO 'user_ketoan'@'localhost';
+
+-- 6. Áp dụng thay đổi
+FLUSH PRIVILEGES;
+
 -- Tạo user cho ứng dụng (thay username/password)
 -- CREATE USER 'app_user'@'localhost' IDENTIFIED BY 'strong_password';
 -- GRANT SELECT, INSERT, UPDATE ON DB1_NHANSU.* TO 'app_user'@'localhost';
