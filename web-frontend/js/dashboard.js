@@ -184,6 +184,22 @@ function showSection(sectionId) {
         if (section) {
             section.style.display = 'block';
             
+            // Adjust Payroll section for Employee role
+            if (sectionId === 'payroll') {
+                const user = JSON.parse(localStorage.getItem(CONFIG?.ADVANCED?.USER_KEY || 'user'));
+                const isEmployee = user.role === 'nhanvien';
+                
+                const tinhLuongBtn = document.getElementById('tinhLuongBtn');
+                const seedLuongBtn = document.getElementById('seedLuongBtn');
+                const payrollSearchContainer = document.querySelector('#payrollSection .search-container');
+                const payrollTitle = document.getElementById('payrollTitle');
+                
+                if (tinhLuongBtn) tinhLuongBtn.style.display = isEmployee ? 'none' : 'inline-block';
+                if (seedLuongBtn) seedLuongBtn.style.display = isEmployee ? 'none' : 'inline-block';
+                if (payrollSearchContainer) payrollSearchContainer.style.display = isEmployee ? 'none' : 'flex';
+                if (payrollTitle) payrollTitle.textContent = isEmployee ? 'Lương của tôi' : 'Quản lý lương';
+            }
+            
             // Load data for section
             if (sectionId === 'employees') loadEmployees();
             else if (sectionId === 'payroll') loadPayrolls();
@@ -202,6 +218,23 @@ async function loadStatistics() {
         const response = await apiClient.getStatistics();
         
         // Update stat cards
+        const user = JSON.parse(localStorage.getItem(CONFIG?.ADVANCED?.USER_KEY || 'user'));
+        const isEmployee = user.role === 'nhanvien';
+
+        const statEmployees = document.getElementById('stat-employees');
+        const statDepts = document.getElementById('stat-departments');
+        const statPayrollTitle = document.querySelector('#stat-payroll h3');
+
+        if (isEmployee) {
+            if (statEmployees) statEmployees.style.display = 'none';
+            if (statDepts) statDepts.style.display = 'none';
+            if (statPayrollTitle) statPayrollTitle.textContent = 'Lương của bạn (tháng này)';
+        } else {
+            if (statEmployees) statEmployees.style.display = 'block';
+            if (statDepts) statDepts.style.display = 'block';
+            if (statPayrollTitle) statPayrollTitle.textContent = 'Lương tháng này';
+        }
+
         document.getElementById('stat-employees').querySelector('.stat-number').textContent = 
             response.data.total_employees || 0;
         document.getElementById('stat-departments').querySelector('.stat-number').textContent = 
@@ -286,7 +319,7 @@ async function loadPayrolls() {
                     <td>${formatCurrency(payroll.thuong || 0)} đ</td>
                     <td>${formatCurrency(payroll.luongThucLinh || 0)} đ</td>
                     <td>
-                        <button class="btn btn-secondary" onclick="viewPayroll(${payroll.maBangLuong})">Xem</button>
+                        <button class="btn btn-secondary" onclick="viewPayroll(${payroll.maChiTiet})">Xem</button>
                     </td>
                 `;
                 tbody.appendChild(row);

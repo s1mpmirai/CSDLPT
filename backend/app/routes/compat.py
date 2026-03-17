@@ -25,6 +25,25 @@ def get_statistics():
             year = now.year
             month_num = now.month
 
+        from flask_jwt_extended import get_jwt
+        claims = get_jwt()
+        user_role = claims.get('role')
+        user_ma_nv = claims.get('maNV')
+
+        if user_role == 'nhanvien':
+            # Chỉ tính lương của chính họ
+            payrolls = ChiTietLuongThang.query.filter_by(MaNV=user_ma_nv, Thang=month_num, Nam=year).all()
+            total_payroll = sum(p.calculate_luong_thuc_linh() for p in payrolls) if payrolls else 0
+            
+            return jsonify({
+                'success': True,
+                'data': {
+                    'total_employees': 1,
+                    'total_departments': 1,
+                    'total_payroll': float(total_payroll),
+                }
+            }), 200
+
         payrolls = ChiTietLuongThang.query.filter_by(Thang=month_num, Nam=year).all()
         total_payroll = sum(p.calculate_luong_thuc_linh() for p in payrolls) if payrolls else 0
 

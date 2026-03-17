@@ -21,7 +21,8 @@ USERS = {
     'nhanvien': {
         'password': generate_password_hash('nhanvien123'),
         'role': 'nhanvien',
-        'name': 'Nhân viên'
+        'name': 'Nhân viên',
+        'maNV': 4
     }
 }
 
@@ -52,9 +53,13 @@ def login():
         return jsonify({'success': False, 'message': f'Tài khoản này không có quyền {requested_role}'}), 403
     
     # Tạo JWT token - identity phải là string
+    additional_claims = {'role': user['role']}
+    if 'maNV' in user:
+        additional_claims['maNV'] = user['maNV']
+        
     access_token = create_access_token(
-        identity=username,  # Chỉ pass username làm identity (PHẢI LÀ STRING)
-        additional_claims={'role': user['role']}  # Role lưu trong additional_claims
+        identity=username,
+        additional_claims=additional_claims
     )
     
     return jsonify({
