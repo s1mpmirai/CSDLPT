@@ -63,3 +63,49 @@ def create_chuc_vu():
     except Exception as e:
         db.session.rollback()
         return jsonify({'success': False, 'message': str(e)}), 500
+@chucvu_bp.route('/<int:maChucVu>', methods=['PUT'])
+@jwt_required()
+def update_chuc_vu(maChucVu):
+    """Cập nhật chức vụ"""
+    try:
+        chuc_vu = ChucVu.query.get(maChucVu)
+        
+        if not chuc_vu:
+            return jsonify({'success': False, 'message': 'Chức vụ không tồn tại'}), 404
+        
+        data = request.get_json()
+        
+        if 'tenChucVu' in data:
+            chuc_vu.TenChucVu = data['tenChucVu']
+        
+        db.session.commit()
+        
+        return jsonify({
+            'success': True,
+            'message': 'Cập nhật chức vụ thành công',
+            'data': chuc_vu.to_dict()
+        }), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+@chucvu_bp.route('/<int:maChucVu>', methods=['DELETE'])
+@jwt_required()
+def delete_chuc_vu(maChucVu):
+    """Xóa chức vụ"""
+    try:
+        chuc_vu = ChucVu.query.get(maChucVu)
+        
+        if not chuc_vu:
+            return jsonify({'success': False, 'message': 'Chức vụ không tồn tại'}), 404
+        
+        db.session.delete(chuc_vu)
+        db.session.commit()
+        
+        return jsonify({
+            'success': True,
+            'message': 'Xóa chức vụ thành công'
+        }), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, 'message': str(e)}), 500

@@ -133,3 +133,32 @@ class LichSuThayDoiLuong(db.Model):
             'lyDo': self.LyDo,
             'ngueNguoi': self.NgueNguoi
         }
+class HopDongLuong(db.Model):
+    """Bảng hợp đồng lương"""
+    __tablename__ = 'HopDongLuong'
+    __bind_key__ = 'db2_luong'
+    
+    MaHopDong = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    MaNV = db.Column(db.Integer, nullable=False, unique=True)
+    NgayKyHopDong = db.Column(db.Date, nullable=False)
+    NgayHetHan = db.Column(db.Date)
+    LuongKhiBatDau = db.Column(db.Float)
+    LuongHienTai = db.Column(db.Float)
+    SoTienTangHangNam = db.Column(db.Float)
+    TrangThai = db.Column(db.Integer, default=1)  # 1: Hoạt động, 0: Hết hạn
+    GhiChu = db.Column(db.String(255))
+    CreateDate = db.Column(db.DateTime, default=datetime.utcnow)
+    UpdateDate = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    def to_dict(self):
+        return {
+            'maHopDong': self.MaHopDong,
+            'maNV': self.MaNV,
+            'ngayKyHopDong': self.NgayKyHopDong.isoformat() if self.NgayKyHopDong else None,
+            'ngayHetHan': self.NgayHetHan.isoformat() if self.NgayHetHan else None,
+            'luongKhiBatDau': float(self.LuongKhiBatDau) if self.LuongKhiBatDau else 0,
+            'luongHienTai': float(self.LuongHienTai) if self.LuongHienTai else 0,
+            'soTienTangHangNam': float(self.SoTienTangHangNam) if self.SoTienTangHangNam else 0,
+            'trangThai': self.TrangThai,
+            'ghiChu': self.GhiChu
+        }

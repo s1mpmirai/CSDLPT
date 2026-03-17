@@ -94,3 +94,23 @@ def update_phong_ban(maPhong):
     except Exception as e:
         db.session.rollback()
         return jsonify({'success': False, 'message': str(e)}), 500
+@phongban_bp.route('/<int:maPhong>', methods=['DELETE'])
+@jwt_required()
+def delete_phong_ban(maPhong):
+    """Xóa phòng ban"""
+    try:
+        phong_ban = PhongBan.query.get(maPhong)
+        
+        if not phong_ban:
+            return jsonify({'success': False, 'message': 'Phòng ban không tồn tại'}), 404
+        
+        db.session.delete(phong_ban)
+        db.session.commit()
+        
+        return jsonify({
+            'success': True,
+            'message': 'Xóa phòng ban thành công'
+        }), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, 'message': str(e)}), 500

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - HR PAYROLL</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="dashboard-page">
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <h1>HR PAYROLL</h1>
+        </div>
+        <div class="navbar-user">
+            <span id="userRole" class="user-role">Admin</span>
+            <button id="logoutBtn" class="btn btn-logout">Đăng xuất</button>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="dashboard-container">
+        <!-- Sidebar Menu -->
+        <aside class="sidebar">
+            <nav class="menu">
+                <ul id="menuList" class="menu-items">
+                    <!-- Menu items will be populated by JavaScript based on role -->
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Welcome Section -->
+            <div id="welcomeSection" class="welcome-section">
+                <h2>Chào mừng, <span id="welcomeName">Admin</span>!</h2>
+                <p id="welcomeMessage">Đây là hệ thống quản lý lương nhân sự của công ty.</p>
+                <div style="margin-top: 20px;">
+                    <button class="btn btn-primary" onclick="seedAllData()">
+                        🌱 Tạo dữ liệu mẫu cho demo
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="quick-stats">
+                <div class="stat-card" id="stat-employees">
+                    <h3>Tổng Nhân viên</h3>
+                    <p class="stat-number">0</p>
+                </div>
+                <div class="stat-card" id="stat-departments">
+                    <h3>Phòng ban</h3>
+                    <p class="stat-number">0</p>
+                </div>
+                <div class="stat-card" id="stat-payroll">
+                    <h3>Lương tháng này</h3>
+                    <p class="stat-number">0 đ</p>
+                </div>
+            </div>
+
+            <!-- Content Sections -->
+            <div id="employeesSection" class="content-section" style="display: none;">
+                <h2>Danh sách nhân viên</h2>
+                <div class="table-controls">
+                    <button class="btn btn-primary" onclick="openAddEmployeeForm()">+ Thêm nhân viên</button>
+                    <button class="btn btn-secondary" onclick="seedEmployeesData()" title="Tạo dữ liệu mẫu nhân viên">
+                        🌱 Seed dữ liệu
+                    </button>
+                    <div class="search-container" style="display: flex; gap: 5px;">
+                        <input 
+                            type="search" 
+                            id="employeeSearch" 
+                            placeholder="Tìm nhân viên..."
+                            class="search-box"
+                        >
+                        <button id="searchBtn" class="btn btn-primary">Tìm</button>
+                    </div>
+                </div>
+                <table class="data-table" id="employeeTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tên</th>
+                            <th>Email</th>
+                            <th>Vị trí</th>
+                            <th>Phòng ban</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody id="employeeTableBody">
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="payrollSection" class="content-section" style="display: none;">
+                <h2>Quản lý lương</h2>
+                <div class="table-controls">
+                    <button class="btn btn-primary" onclick="openCalculatePayrollForm()">+ Tính lương</button>
+                    <button class="btn btn-secondary" onclick="seedPayrollsData()" title="Tạo dữ liệu mẫu lương">
+                        🌱 Seed dữ liệu
+                    </button>
+                    <input 
+                        type="month" 
+                        id="payrollMonth" 
+                        class="search-box"
+                    >
+                    <div class="search-container" style="display: flex; gap: 5px;">
+                        <input 
+                            type="text" 
+                            id="payrollSearch" 
+                            placeholder="Tìm tên nhân viên..."
+                            class="search-box"
+                        >
+                        <button id="payrollSearchBtn" class="btn btn-primary">Tìm</button>
+                    </div>
+                </div>
+                <table class="data-table" id="payrollTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nhân viên</th>
+                            <th>Tháng</th>
+                            <th>Lương cơ bản</th>
+                            <th>Thưởng</th>
+                            <th>Thực lĩnh</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody id="payrollTableBody">
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="departmentsSection" class="content-section" style="display: none;">
+                <h2>Quản lý phòng ban</h2>
+                <div class="table-controls">
+                    <button class="btn btn-primary" onclick="openAddDepartmentForm()">+ Thêm phòng ban</button>
+                    <button class="btn btn-secondary" onclick="seedDepartmentsData()" title="Tạo dữ liệu mẫu phòng ban">
+                        🌱 Seed dữ liệu
+                    </button>
+                </div>
+                <table class="data-table" id="departmentTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tên phòng ban</th>
+                            <th>Số lượng nhân viên</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody id="departmentTableBody">
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="reportsSection" class="content-section" style="display: none;">
+                <h2>Báo cáo</h2>
+                <div class="report-filters">
+                    <input type="month" id="reportMonth" class="search-box">
+                    <button class="btn btn-primary" onclick="generateReport()">Tạo báo cáo</button>
+                    <button class="btn btn-secondary" onclick="exportReport()">Xuất Excel</button>
+                </div>
+                <div id="reportContent" class="report-content"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Message Modal -->
+    <div id="messageModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Thông báo</h2>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="modalMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="closeModal()">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div id="loadingSpinner" class="loading-spinner">
+        <div class="spinner"></div>
+        <p>Đang tải dữ liệu...</p>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/api-client.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

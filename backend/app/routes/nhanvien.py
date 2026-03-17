@@ -2,7 +2,9 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt
 from app import db
 from app.models.nhanvien import NhanVien, PhongBan, ChucVu
+from app.models.luong import BangLuong
 from sqlalchemy import and_
+from datetime import date
 
 nhanvien_bp = Blueprint('nhanvien', __name__)
 
@@ -34,8 +36,17 @@ def get_nhanvien_list():
         limit = request.args.get('limit', 20, type=int)
         phong_ban = request.args.get('phongBan', None, type=int)
         trang_thai = request.args.get('trangThai', None, type=int)
+        q = request.args.get('q', None)
         
         query = NhanVien.query
+        
+        # Search
+        if q:
+            search_val = f"%{q}%"
+            query = query.filter(
+                (NhanVien.TenNV.ilike(search_val)) | 
+                (NhanVien.Email.ilike(search_val))
+            )
         
         # Filter
         if phong_ban:
@@ -122,11 +133,25 @@ def create_nhanvien():
         )
         
         db.session.add(nhanvien)
+        db.session.flush() # Lấy MaNV mới tạo
+        
+        # Requirement 3: Đồng bộ hóa thao tác - Tự động Insert vào DB2 (Lương)
+        bang_luong = BangLuong(
+            MaNV=nhanvien.MaNV,
+            LuongCoBan=5000000, # Lương mặc định
+            HeSoLuong=1.0,
+            PhuCapChucVu=0,
+            PhuCapPhongBan=0,
+            NgayApDung=date.today(),
+            TrangThai=1
+        )
+        db.session.add(bang_luong)
+        
         db.session.commit()
         
         return jsonify({
             'success': True,
-            'message': 'Thêm nhân viên thành công',
+            'message': 'Thêm nhân viên thành công và đã tạo bảng lương mặc định',
             'data': nhanvien.to_dict()
         }), 201
     except Exception as e:
@@ -191,11 +216,17 @@ def delete_nhanvien(maNV):
             return jsonify({'success': False, 'message': 'Nhân viên không tồn tại'}), 404
         
         nhanvien.TrangThai = 0
+        
+        # Requirement 3: Đồng bộ hóa thao tác - Tự động cập nhật bên DB2
+        bang_luong = BangLuong.query.filter_by(MaNV=maNV).first()
+        if bang_luong:
+            bang_luong.TrangThai = 0
+            
         db.session.commit()
         
         return jsonify({
             'success': True,
-            'message': 'Xóa nhân viên thành công'
+            'message': 'Xóa nhân viên thành công (đã vô hiệu hóa bảng lương)'
         }), 200
     except Exception as e:
         db.session.rollback()

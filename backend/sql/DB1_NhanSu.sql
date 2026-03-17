@@ -110,6 +110,24 @@ FROM NhanVien nv
 INNER JOIN PhongBan pb ON nv.MaPhong = pb.MaPhong
 INNER JOIN ChucVu cv ON nv.MaChucVu = cv.MaChucVu;
 
+-- View: Báo cáo lương chi tiết (JOIN sang DB2)
+-- Requirement 2: Tính trong suốt (Transparency) - Admin xem JOIN tự động
+CREATE VIEW vw_AdminNhanVienDayDu AS
+SELECT 
+    nv.MaNV,
+    nv.TenNV,
+    pb.TenPhong,
+    cv.TenChucVu,
+    l.LuongCoBan,
+    l.HeSoLuong,
+    l.PhuCapChucVu,
+    l.PhuCapPhongBan,
+    (l.LuongCoBan * l.HeSoLuong + l.PhuCapChucVu + l.PhuCapPhongBan) AS TongThuNhap
+FROM NhanVien nv
+INNER JOIN PhongBan pb ON nv.MaPhong = pb.MaPhong
+INNER JOIN ChucVu cv ON nv.MaChucVu = cv.MaChucVu
+LEFT JOIN DB2_LUONG.BangLuong l ON nv.MaNV = l.MaNV;
+
 -- View: Nhân viên theo phòng ban
 CREATE VIEW vw_NhanVienTheoPhongBan AS
 SELECT 

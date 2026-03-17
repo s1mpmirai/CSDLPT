@@ -35,6 +35,7 @@ def login():
     
     username = data.get('username')
     password = data.get('password')
+    requested_role = data.get('role')
     
     # Kiểm tra user tồn tại
     if username not in USERS:
@@ -45,6 +46,10 @@ def login():
     # Kiểm tra password
     if not check_password_hash(user['password'], password):
         return jsonify({'success': False, 'message': 'Invalid password'}), 401
+    
+    # Kiểm tra role (nếu frontend gởi lên)
+    if requested_role and user['role'] != requested_role:
+        return jsonify({'success': False, 'message': f'Tài khoản này không có quyền {requested_role}'}), 403
     
     # Tạo JWT token - identity phải là string
     access_token = create_access_token(

@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt
 from app import db
 from app.models.luong import BangLuong, ChiTietLuongThang
+from app.models.nhanvien import NhanVien
 from datetime import date
 
 luong_bp = Blueprint('luong', __name__)
@@ -199,13 +200,62 @@ def get_danh_sach_luong_thang():
         if not thang or not nam:
             return jsonify({'success': False, 'message': 'Missing thang or nam'}), 400
         
-        chi_tiet_list = ChiTietLuongThang.query.filter_by(
+        q = request.args.get('q', None)
+        
+        query = ChiTietLuongThang.query.filter_by(
             Thang=thang, Nam=nam, TrangThai=1
-        ).all()
+        )
+        
+        if q:
+            # Tìm danh sách MaNV thỏa mãn tên hoặc email từ DB nhansu
+            search_val = f"%{q}%"
+            matching_nvs = NhanVien.query.filter(
+                (NhanVien.TenNV.ilike(search_val)) | 
+                (NhanVien.Email.ilike(search_val))
+            ).all()
+            matching_ids = [nv.MaNV for nv in matching_nvs]
+            query = query.filter(ChiTietLuongThang.MaNV.in_(matching_ids))
+            
+        chi_tiet_list = query.all()
+        
+        # Mapping tên nhân viên vào kết quả
+        # Lấy tất cả MaNV cần thiết để fetch tên 1 lần (optimize)
+        needed_ids = list(set([ct.MaNV for ct in chi_tiet_list]))
+        nvs = NhanVien.query.filter(NhanVien.MaNV.in_(needed_ids)).all()
+        name_map = {nv.MaNV: nv.TenNV for nv in nvs}
+        
+        results = []
+        for ct in chi_tiet_list:
+            d = ct.to_dict()
+            d['tenNV'] = name_map.get(ct.MaNV, f"NV {ct.MaNV}")
+            results.append(d)
         
         return jsonify({
             'success': True,
-            'data': [ct.to_dict() for ct in chi_tiet_list]
+            'data': results
+        }), 200
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500
+@luong_bp.route('/chi-tiet/id/<int:id>', methods=['GET'])
+@jwt_required()
+def get_chi_tiet_luong_by_id(id):
+    """Lấy chi tiết 1 bản ghi lương theo ID"""
+    try:
+        chi_tiet = ChiTietLuongThang.query.get(id)
+        
+        if not chi_tiet:
+            return jsonify({'success': False, 'message': 'Chi tiết lương không tồn tại'}), 404
+        
+        # Get employee info from DB1 (since this is cross-DB)
+        from app.models.nhanvien import NhanVien
+        employee = NhanVien.query.get(chi_tiet.MaNV)
+        
+        data = chi_tiet.to_dict()
+        data['tenNV'] = employee.TenNV if employee else f'NV {chi_tiet.MaNV}'
+        
+        return jsonify({
+            'success': True,
+            'data': data
         }), 200
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)}), 500
