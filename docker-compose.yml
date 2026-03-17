@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  # MySQL Database with two DBs (Vertical Partitioning)
+  db-server:
+    image: mysql:8.0
+    container_name: hr-payroll-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+    volumes:
+      - ./backend/sql/DB1_NhanSu.sql:/docker-entrypoint-initdb.d/DB1_NhanSu.sql
+      - ./backend/sql/DB2_Luong.sql:/docker-entrypoint-initdb.d/DB2_Luong.sql
+      - ./backend/sql/docker_init.sql:/docker-entrypoint-initdb.d/docker_init_master.sql
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  # Backend: Flask API
+  backend:
+    build: ./backend
+    container_name: hr-payroll-backend
+    environment:
+      - DATABASE_URL_DB1=mysql+pymysql://root:root_password@db-server/DB1_NHANSU
+      - DATABASE_URL_DB2=mysql+pymysql://root:root_password@db-server/DB2_LUONG
+      - SECRET_KEY=9bJ7kL2mN5pQ8xW3yZ1aB4cD6eF9gH2jK5mN80xY3zC6dE9fG2h
+      - JWT_SECRET_KEY=3kL7mN1pQ5xW9yZ2aB6cD4eF8gH3jK7mN2pQ9rS3tU6vW1xY4zC7dE2fG5h
+    ports:
+      - "5000:5000"
+    depends_on:
+      db-server:
+        condition: service_healthy
+
+  # Frontend: Nginx
+  web-frontend:
+    build: ./web-frontend
+    container_name: hr-payroll-frontend
+    ports:
+      - "8000:80"
+    depends_on:
+      - backend

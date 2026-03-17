@@ -30,6 +30,17 @@ async function login(username, password, role) {
         
         const response = await apiClient.login(username, password, role);
         
+        if (response.success) {
+            const user = {
+                username: username,
+                role: response.role || role,
+                name: response.name || 'User',
+                maNV: response.maNV
+            };
+            localStorage.setItem(CONFIG.ADVANCED.USER_KEY, JSON.stringify(user));
+            localStorage.setItem(CONFIG.ADVANCED.TOKEN_KEY, response.token);
+        }
+
         showLoading(false);
         showModal('Thành công', 'Đăng nhập thành công!', () => {
             // Redirect to dashboard

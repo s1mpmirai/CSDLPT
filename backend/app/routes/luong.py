@@ -16,6 +16,8 @@ def check_permission(required_role):
         return user_role in ['admin', 'ketoan']
     if required_role == 'admin':
         return user_role == 'admin'
+    if required_role == 'all':
+        return user_role in ['admin', 'ketoan', 'nhanvien']
     
     return False
 
@@ -190,8 +192,12 @@ def create_chi_tiet_luong():
 @jwt_required()
 def get_danh_sach_luong_thang():
     """Lấy danh sách lương tháng"""
-    if not check_permission('admin_ketoan'):
+    if not check_permission('all'):
         return jsonify({'success': False, 'message': 'Unauthorized'}), 403
+    
+    claims = get_jwt()
+    user_role = claims.get('role')
+    user_ma_nv = claims.get('maNV')
     
     try:
         thang = request.args.get('thang', type=int)
@@ -206,7 +212,11 @@ def get_danh_sach_luong_thang():
             Thang=thang, Nam=nam, TrangThai=1
         )
         
-        if q:
+        if user_role == 'nhanvien':
+            if not user_ma_nv:
+                return jsonify({'success': False, 'message': 'Account not linked to an employee'}), 400
+            query = query.filter_by(MaNV=user_ma_nv)
+        elif q:
             # Tìm danh sách MaNV thỏa mãn tên hoặc email từ DB nhansu
             search_val = f"%{q}%"
             matching_nvs = NhanVien.query.filter(
@@ -245,7 +255,15 @@ def get_chi_tiet_luong_by_id(id):
         
         if not chi_tiet:
             return jsonify({'success': False, 'message': 'Chi tiết lương không tồn tại'}), 404
+            
+        # Kiểm tra quyền: Admin, Kế toán hoặc Chính chủ
+        claims = get_jwt()
+        user_role = claims.get('role')
+        user_ma_nv = claims.get('maNV')
         
+        if user_role == 'nhanvien' and chi_tiet.MaNV != user_ma_nv:
+            return jsonify({'success': False, 'message': 'Bạn không có quyền xem lương của người khác'}), 403
+            
         # Get employee info from DB1 (since this is cross-DB)
         from app.models.nhanvien import NhanVien
         employee = NhanVien.query.get(chi_tiet.MaNV)
