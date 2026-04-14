@@ -474,3 +474,41 @@ flowchart TD
 14. Hình 14 (Sequence Xem chi tiết lương + Role Guard) -> Chương 3.4.4 (bổ sung)
 15. Hình 15 (Activity Xóa mềm đồng bộ) -> Chương 4.4.2
 16. Hình 16 (Luồng Frontend -> Backend) -> Chương 4.8
+
+## Phụ Lục Chèn Vào Mục 2.3 - Yêu Cầu Phi Chức Năng
+
+### 2.3. Yêu cầu phi chức năng (bổ sung lý do và dẫn chứng)
+- Hiệu năng:
+  - Mục tiêu: truy vấn cross-database không vượt quá 2 giây trong điều kiện dữ liệu đồ án (ví dụ <= 100 nhân viên hoạt động, truy vấn theo tháng/năm).
+  - Cơ sở kỹ thuật: hệ thống có view cross-DB để đọc tổng hợp và đã tạo index cho các cột lọc/chia nhóm chính (MaNV, Thang, Nam, TrangThai, Email), giúp giảm full scan và tối ưu JOIN.
+  - Dẫn chứng mã nguồn: `backend/sql/DB1_NhanSu.sql` (view `vw_AdminNhanVienDayDu`, JOIN sang `DB2_LUONG.BangLuong`), `backend/sql/DB1_NhanSu.sql` (các index NhanVien), `backend/sql/DB2_Luong.sql` (UNIQUE MaNV-Thang-Nam và index ChiTietLuongThang).
+  - Ghi chú học thuật: hiện repo chưa có báo cáo benchmark/JMeter/k6, nên nên ghi rõ đây là chỉ tiêu mục tiêu và cần bổ sung số đo thực nghiệm ở chương kiểm thử.
+
+- Bảo mật:
+  - Tất cả API nghiệp vụ đều yêu cầu JWT hợp lệ (`@jwt_required()`) và kiểm tra quyền theo role trước khi thao tác dữ liệu.
+  - Dẫn chứng mã nguồn: `backend/app/routes/nhanvien.py`, `backend/app/routes/luong.py`, `backend/app/routes/compat.py` đều dùng `@jwt_required()`; logic phân quyền nằm ở `check_permission(...)` và điều kiện kiểm tra role trong route.
+  - Ví dụ kiểm soát truy cập theo chủ thể: nhân viên không được xem chi tiết lương của người khác tại endpoint chi tiết lương theo id.
+
+- Tính nhất quán:
+  - Khi thêm nhân viên, backend tạo bản ghi nhân sự (DB1) và đồng thời tạo bảng lương mặc định (DB2) trong cùng luồng xử lý; khi có lỗi sẽ rollback.
+  - Khi xóa mềm nhân viên, backend đồng bộ cập nhật trạng thái ở cả DB1 (NhanVien.TrangThai) và DB2 (BangLuong.TrangThai).
+  - Dẫn chứng mã nguồn: `backend/app/routes/nhanvien.py` (flush MaNV, tạo BangLuong, commit/rollback ở cả luồng create và delete).
+
+- Khả năng mở rộng:
+  - Kiến trúc đang tách miền dữ liệu theo bind, giúp mở rộng thêm DB bằng cách khai báo bind mới, model mới, và route/service tương ứng mà không phá kiến trúc hiện tại.
+  - Dẫn chứng mã nguồn: `backend/config.py` (`SQLALCHEMY_BINDS`), `backend/app/models/nhanvien.py` (`__bind_key__ = 'db1_nhansu'`), `backend/app/models/luong.py` (`__bind_key__ = 'db2_luong'`).
+
+### Bảng từ viết tắt (khuyến nghị thêm vào báo cáo)
+| Từ viết tắt | Nghĩa |
+|---|---|
+| API | Application Programming Interface |
+| JWT | JSON Web Token |
+| CUD | Create - Update - Delete |
+| CRUD | Create - Read - Update - Delete |
+| DB | Database |
+| SLA | Service Level Agreement |
+| RBAC | Role-Based Access Control |
+
+### 2 câu hỏi phản biện nên đặt ra
+1. Chỉ tiêu 2 giây được đo trên cấu hình dữ liệu, phần cứng và kịch bản tải nào; đã có số liệu benchmark thực nghiệm hay mới là mục tiêu thiết kế?
+2. Nhận định "dễ mở rộng thêm DB" đã được kiểm chứng bằng một thử nghiệm thêm bind/model/route thực tế chưa, hay mới dừng ở khả năng lý thuyết của kiến trúc?
