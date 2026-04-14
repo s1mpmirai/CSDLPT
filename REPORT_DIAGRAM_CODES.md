@@ -96,9 +96,9 @@ flowchart TB
 ## 3) Use Case Tổng Hợp Theo Vai Trò
 ```mermaid
 flowchart LR
-  A[Admin]
-  K[Kế toán]
-  N[Nhân viên]
+  A["🧍 Admin"]
+  K["🧍 Kế toán"]
+  N["🧍 Nhân viên"]
 
   subgraph SYS[HỆ THỐNG HR PAYROLL PHÂN TÁN]
     direction TB
@@ -119,6 +119,10 @@ flowchart LR
     UC15([UC15 Xem phiếu lương])
     UC16([UC16 Xem lịch sử lương bản thân])
   end
+
+  style A fill:transparent,stroke:transparent
+  style K fill:transparent,stroke:transparent
+  style N fill:transparent,stroke:transparent
 
   A --> UC01
   A --> UC02
@@ -330,14 +334,19 @@ flowchart LR
 ## 11) Use Case Chi Tiết - Admin (3.2.1)
 ```mermaid
 flowchart LR
-  A((Admin))
+  A["🧍 Admin"]
 
-  UC01[UC01 Đăng nhập]
-  UC02[UC02 Xem Dashboard]
-  UC03[UC03 Quản lý Nhân viên]
-  UC04[UC04 Quản lý Phòng ban]
-  UC05[UC05 Quản lý Chức vụ]
-  UC06["UC06 Xem thông tin đầy đủ NV<br/>vw_AdminNhanVienDayDu"]
+  subgraph SYSA[HỆ THỐNG HR PAYROLL PHÂN TÁN]
+    direction TB
+    UC01([UC01 Đăng nhập])
+    UC02([UC02 Xem Dashboard])
+    UC03([UC03 Quản lý Nhân viên])
+    UC04([UC04 Quản lý Phòng ban])
+    UC05([UC05 Quản lý Chức vụ])
+    UC06([UC06 Xem thông tin đầy đủ NV - vw_AdminNhanVienDayDu])
+  end
+
+  style A fill:transparent,stroke:transparent
 
   A --> UC01
   A --> UC02
@@ -350,14 +359,19 @@ flowchart LR
 ## 12) Use Case Chi Tiết - Kế Toán (3.2.2)
 ```mermaid
 flowchart LR
-  K((Kế toán))
+  K["🧍 Kế toán"]
 
-  UC07[UC07 Xem danh sách nhân viên]
-  UC08[UC08 Quản lý Bảng lương]
-  UC09[UC09 Tính lương tháng]
-  UC10[UC10 Xem lịch sử lương]
-  UC11[UC11 Quản lý Bảo hiểm]
-  UC12[UC12 Xem báo cáo lương]
+  subgraph SYSK[HỆ THỐNG HR PAYROLL PHÂN TÁN]
+    direction TB
+    UC07([UC07 Xem danh sách nhân viên])
+    UC08([UC08 Quản lý Bảng lương])
+    UC09([UC09 Tính lương tháng])
+    UC10([UC10 Xem lịch sử lương])
+    UC11([UC11 Quản lý Bảo hiểm])
+    UC12([UC12 Xem báo cáo lương])
+  end
+
+  style K fill:transparent,stroke:transparent
 
   K --> UC07
   K --> UC08
@@ -370,12 +384,17 @@ flowchart LR
 ## 13) Use Case Chi Tiết - Nhân Viên (3.2.3)
 ```mermaid
 flowchart LR
-  N((Nhân viên))
+  N["🧍 Nhân viên"]
 
-  UC13[UC13 Đăng nhập]
-  UC14[UC14 Xem thông tin cá nhân]
-  UC15[UC15 Xem phiếu lương]
-  UC16[UC16 Xem lịch sử lương bản thân]
+  subgraph SYSN[HỆ THỐNG HR PAYROLL PHÂN TÁN]
+    direction TB
+    UC13([UC13 Đăng nhập])
+    UC14([UC14 Xem thông tin cá nhân])
+    UC15([UC15 Xem phiếu lương])
+    UC16([UC16 Xem lịch sử lương bản thân])
+  end
+
+  style N fill:transparent,stroke:transparent
 
   N --> UC13
   N --> UC14
@@ -429,11 +448,11 @@ flowchart TD
   D --> M4[Phiếu lương]
   D --> M5[Thống kê]
 
-  M1 -->|API| A1[/api/nhanvien]
-  M2 -->|API| A2[/api/nhanvien/{id}]
-  M3 -->|API| A3[/api/luong/danh-sach]
-  M4 -->|API| A4[/api/luong/chi-tiet]
-  M5 -->|API| A5[/api/statistics]
+  M1 -->|API| A1["/api/nhanvien"]
+  M2 -->|API| A2["/api/nhanvien/{id}"]
+  M3 -->|API| A3["/api/luong/danh-sach"]
+  M4 -->|API| A4["/api/luong/chi-tiet"]
+  M5 -->|API| A5["/api/statistics"]
 
   D -->|Đăng xuất| L
 ```
