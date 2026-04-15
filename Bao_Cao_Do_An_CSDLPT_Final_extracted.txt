@@ -1,0 +1,608 @@
+﻿-350248center00
+TRƯỜNG ĐẠI HỌC SÀI GÒN
+KHOA CÔNG NGHỆ THÔNG TIN
+BÁO CÁO ĐỒ ÁN MÔN HỌC
+CƠ SỞ DỮ LIỆU PHÂN TÁN
+Đề tài:
+HỆ THỐNG QUẢN LÝ NHÂN SỰ - TIỀN LƯƠNG PHÂN TÁN
+Giáo viên hướng dẫn: TS. Vũ Ngọc Thanh Sang
+Nhóm thực hiện: Nhóm 01
+Võ Anh Hào – 3123411087
+Dương Nhiên Phong – 3123411223
+Nguyễn Thanh Bình – 3123411036
+Nguyễn Hoàng Tín – 3123411299
+Bùi Minh Ngọc – 3123411198
+Thành phố Hồ Chí Minh, Tháng 04 năm 2026
+MỤC LỤC
+TOC \h \o "1-3" \t "undefined,1,undefined,2,undefined,3"LỜI CẢM ƠN	4
+CHƯƠNG 1: GIỚI THIỆU ĐỀ TÀI HR PAYROLL PHÂN TÁN	 PAGEREF _Toc227093820 \h 5
+1.1. Tổng quan đề tài	 PAGEREF _Toc227093821 \h 5
+1.2. Mục tiêu hệ thống	 PAGEREF _Toc227093822 \h 5
+1.3. Công nghệ sử dụng	 PAGEREF _Toc227093823 \h 5
+1.4. Phạm vi hệ thống	 PAGEREF _Toc227093824 \h 6
+CHƯƠNG 2: KHẢO SÁT VÀ YÊU CẦU HỆ THỐNG	 PAGEREF _Toc227093825 \h 7
+2.1. Khảo sát nghiệp vụ	 PAGEREF _Toc227093826 \h 7
+2.1.1. Nghiệp vụ Nhân sự (HR)	 PAGEREF _Toc227093827 \h 7
+2.1.2. Nghiệp vụ Tiền lương (Payroll)	 PAGEREF _Toc227093828 \h 7
+2.2. Yêu cầu chức năng	 PAGEREF _Toc227093829 \h 7
+2.3. Yêu cầu phi chức năng	 PAGEREF _Toc227093830 \h 8
+2.4. Yêu cầu về phân tán CSDL	 PAGEREF _Toc227093831 \h 9
+CHƯƠNG 3: PHÂN TÍCH USE CASE THEO ROLE	 PAGEREF _Toc227093832 \h 12
+3.1. Xác định tác nhân (Actor)	 PAGEREF _Toc227093833 \h 12
+3.2. Biểu đồ Use Case tổng hợp	 PAGEREF _Toc227093834 \h 12
+3.2.1. Use Case của Admin	 PAGEREF _Toc227093835 \h 13
+3.2.2. Use Case của Kế toán	 PAGEREF _Toc227093836 \h 14
+3.2.3. Use Case của Nhân viên	 PAGEREF _Toc227093837 \h 15
+3.3. Đặc tả Use Case quan trọng	 PAGEREF _Toc227093838 \h 16
+UC03 - Quản lý Nhân viên (Thêm mới)	 PAGEREF _Toc227093839 \h 16
+UC09 - Tính lương tháng	 PAGEREF _Toc227093840 \h 17
+3.4. Sequence Diagram - Luồng chính	 PAGEREF _Toc227093841 \h 18
+3.4.1. Sequence: Đăng nhập + JWT	 PAGEREF _Toc227093842 \h 18
+3.4.2. Sequence: Thêm nhân viên + Tạo bảng lương	 PAGEREF _Toc227093843 \h 19
+3.4.3. Sequence: Tính lương tháng + Hiển thị dashboard	 PAGEREF _Toc227093844 \h 20
+CHƯƠNG 4: THIẾT KẾ KIẾN TRÚC + CSDL PHÂN TÁN + API + UI	 PAGEREF _Toc227093845 \h 22
+4.1. Kiến trúc tổng thể hệ thống	 PAGEREF _Toc227093846 \h 22
+4.2. Kiến trúc phân mảnh CSDL	 PAGEREF _Toc227093847 \h 22
+4.2.1. DB1_NHANSU - Cơ sở dữ liệu Nhân sự	 PAGEREF _Toc227093848 \h 23
+4.2.2. DB2_LUONG - Cơ sở dữ liệu Tiền lương	 PAGEREF _Toc227093849 \h 24
+4.2.3. Lý do tách domain dữ liệu	 PAGEREF _Toc227093850 \h 24
+4.3. Tính trong suốt dữ liệu (Transparency)	 PAGEREF _Toc227093851 \h 24
+4.3.1. View cross-database: vw_AdminNhanVienDayDu	 PAGEREF _Toc227093852 \h 25
+4.3.2. Transparency ở tầng API	 PAGEREF _Toc227093853 \h 25
+4.4. Đồng bộ thao tác (Consistency/Sync)	 PAGEREF _Toc227093854 \h 25
+4.4.1. Luồng thêm nhân viên	 PAGEREF _Toc227093855 \h 26
+4.4.2. Luồng xóa mềm nhân viên	 PAGEREF _Toc227093856 \h 26
+4.5. Cấu hình SQLAlchemy Binds	 PAGEREF _Toc227093857 \h 26
+4.6. Bảo mật và Phân quyền	 PAGEREF _Toc227093858 \h 26
+4.6.1. Vai trò và quyền hạn	 PAGEREF _Toc227093859 \h 26
+4.6.2. JWT Authentication	 PAGEREF _Toc227093860 \h 27
+4.6.3. SQL Grants phân quyền DB	 PAGEREF _Toc227093861 \h 27
+4.7. API Contract	 PAGEREF _Toc227093862 \h 27
+4.8. Thiết kế giao diện (UI)	 PAGEREF _Toc227093863 \h 28
+4.8.1. Luồng Frontend -> Backend	 PAGEREF _Toc227093864 \h 28
+4.8.2. Các màn hình chính	 PAGEREF _Toc227093865 \h 29
+CHƯƠNG 5: CÀI ĐẶT VÀ TRIỂN KHAI	 PAGEREF _Toc227093866 \h 30
+5.1. Môi trường phát triển	 PAGEREF _Toc227093867 \h 30
+5.2. Cấu trúc thư mục dự án	 PAGEREF _Toc227093868 \h 30
+5.3. Cài đặt và chạy Local	 PAGEREF _Toc227093869 \h 30
+5.3.1. Backend	 PAGEREF _Toc227093870 \h 30
+5.3.2. Frontend	 PAGEREF _Toc227093871 \h 30
+CHƯƠNG 6: KIỂM THỬ VÀ ĐÁNH GIÁ THEO 4 YÊU CẦU ĐỀ BÀI	 PAGEREF _Toc227093872 \h 31
+6.1. Tiêu chí kiểm thử	 PAGEREF _Toc227093873 \h 31
+6.2. Test Case - Phân mảnh dữ liệu	 PAGEREF _Toc227093874 \h 31
+6.3. Test Case - Tính trong suốt	 PAGEREF _Toc227093875 \h 31
+6.4. Test Case - Đồng bộ thao tác	 PAGEREF _Toc227093876 \h 31
+6.5. Test Case - Phân quyền	 PAGEREF _Toc227093877 \h 32
+6.6. Phân công công việc	 PAGEREF _Toc227093878 \h 32
+CHƯƠNG 7: KẾT LUẬN, ƯU ĐIỂM, HẠN CHẾ, HƯỚNG PHÁT TRIỂN	 PAGEREF _Toc227093879 \h 34
+7.1. Kết quả đạt được	 PAGEREF _Toc227093880 \h 34
+7.2. Ưu điểm của hệ thống	 PAGEREF _Toc227093881 \h 34
+7.3. Hạn chế	 PAGEREF _Toc227093882 \h 34
+7.4. Hướng phát triển	 PAGEREF _Toc227093883 \h 35
+LỜI CẢM ƠN
+Nhóm xin chân thành cảm ơn giảng viên hướng dẫn đã định hướng và góp ý trong suốt quá trình thực hiện đề tài. Đây là cơ hội quý giá để nhóm áp dụng lý thuyết Cơ sở dữ liệu phân tán vào một bài toán thực tế, từ đó hiểu sâu hơn về các thách thức kỹ thuật khi thiết kế hệ thống phân tán trong môi trường doanh nghiệp.
+CHƯƠNG 1: GIỚI THIỆU ĐỀ TÀI HR PAYROLL PHÂN TÁN
+1.1. Tổng quan đề tài
+Hệ thống Quản lý Nhân sự - Tiền lương Phân tán (HR Payroll Distributed System) là một ứng dụng web được xây dựng nhằm giải quyết bài toán quản lý thông tin nhân viên và tính toán tiền lương trong môi trường cơ sở dữ liệu phân tán.
+Hệ thống được thiết kế với kiến trúc phân tán, sử dụng hai cơ sở dữ liệu độc lập là DB1_NHANSU và DB2_LUONG, đảm bảo tách biệt miền dữ liệu nhân sự và miền dữ liệu tiền lương theo nguyên tắc Single Responsibility.
+1.2. Mục tiêu hệ thống
+Quản lý thông tin nhân viên, phòng ban, chức vụ trên DB1_NHANSU.
+Quản lý bảng lương, chi tiết lương tháng, hợp đồng lương trên DB2_LUONG.
+Đảm bảo tính trong suốt dữ liệu (data transparency) khi truy vấn liên cơ sở dữ liệu.
+Đảm bảo tính đồng bộ thao tác (consistency) khi thêm/xóa nhân viên.
+Phân quyền truy cập theo vai trò: Admin, Kế toán, Nhân viên.
+Bảo mật bằng JWT Authentication.
+1.3. Công nghệ sử dụng
+Bảng 1.1. Công nghệ sử dụng trong hệ thống
+Thành phần
+Công nghệ
+Backend Framework
+Flask (Python)
+ORM / DB Binding
+SQLAlchemy với BINDS config
+Cơ sở dữ liệu
+MySQL (DB1_NHANSU + DB2_LUONG)
+Xác thực
+JWT (JSON Web Token)
+Frontend
+Web Frontend (HTML/CSS/JS)
+Triển khai
+Quản lý phiên bản
+Git / GitHub
+1.4. Phạm vi hệ thống
+Hệ thống bao gồm 3 vai trò người dùng chính:
+Admin: Toàn quyền quản lý nhân viên, phòng ban, chức vụ và xem báo cáo tổng hợp.
+Kế toán (ketoan): Quản lý bảng lương, tính lương tháng, xem chi tiết lương.
+Nhân viên (nhanvien): Xem thông tin cá nhân và bảng lương của bản thân.
+CHƯƠNG 2: KHẢO SÁT VÀ YÊU CẦU HỆ THỐNG
+2.1. Khảo sát nghiệp vụ
+2.1.1. Nghiệp vụ Nhân sự (HR)
+Bộ phận nhân sự cần quản lý đầy đủ thông tin về nhân viên bao gồm họ tên, ngày sinh, giới tính, địa chỉ, số điện thoại, email, phòng ban, chức vụ và trạng thái làm việc. Ngoài ra cần theo dõi lịch sử thay đổi vị trí công tác.
+Thêm mới nhân viên khi tuyển dụng.
+Cập nhật thông tin nhân viên khi có thay đổi.
+Xóa mềm nhân viên (TrangThai = 0) khi nghỉ việc.
+Quản lý danh sách phòng ban và chức vụ.
+Tìm kiếm, lọc nhân viên theo nhiều tiêu chí.
+2.1.2. Nghiệp vụ Tiền lương (Payroll)
+Bộ phận kế toán cần tính toán và quản lý lương tháng cho toàn bộ nhân viên. Quá trình tính lương bao gồm lương cơ bản, phụ cấp, thưởng, khấu trừ bảo hiểm xã hội, bảo hiểm y tế và thuế thu nhập cá nhân.
+Quản lý bảng lương (mức lương cơ bản) theo từng nhân viên.
+Tính lương tháng và tạo chi tiết lương tháng.
+Quản lý cấu hình bảo hiểm (BHXH, BHYT, BHTN).
+Xem lịch sử thay đổi lương.
+Quản lý hợp đồng lương.
+2.2. Yêu cầu chức năng
+Bảng 2.1. Danh sách yêu cầu chức năng hệ thống
+STT
+Mã yêu cầu
+Mô tả
+Vai trò
+1
+YC01
+Đăng nhập hệ thống bằng tài khoản và mật khẩu
+Tất cả
+2
+YC02
+Xem dashboard thống kê tổng hợp
+Admin, Kế toán
+3
+YC03
+Thêm/sửa/xóa thông tin nhân viên
+Admin
+4
+YC04
+Quản lý phòng ban và chức vụ
+Admin
+5
+YC05
+Xem danh sách nhân viên, tìm kiếm và lọc
+Admin, Kế toán
+6
+YC06
+Quản lý bảng lương nhân viên
+Kế toán
+7
+YC07
+Tính lương tháng và tạo phiếu lương
+Kế toán
+8
+YC08
+Xem chi tiết lương từng tháng
+Kế toán, Nhân viên
+9
+YC09
+Xem thông tin cá nhân của nhân viên
+Nhân viên
+10
+YC10
+Xem lịch sử thay đổi lương
+Kế toán
+2.3. Yêu cầu phi chức năng
+a) Hiệu năng:
+Mục tiêu: truy vấn cross-database không vượt quá 2 giây trong điều kiện dữ liệu đồ án (ví dụ <= 100 nhân viên hoạt động, truy vấn theo tháng/năm).
+Cơ sở kỹ thuật: hệ thống có view cross-DB để đọc tổng hợp và đã tạo index cho các cột lọc/chia nhóm chính (MaNV, Thang, Nam, TrangThai, Email), giúp giảm full scan và tối ưu JOIN.
+Dẫn chứng mã nguồn: backend/sql/DB1_NhanSu.sql (view vw_AdminNhanVienDayDu, JOIN sang DB2_LUONG.BangLuong), backend/sql/DB2_Luong.sql (UNIQUE MaNV-Thang-Nam và index ChiTietLuongThang).
+Ghi chú học thuật: hiện repo chưa có báo cáo benchmark/JMeter/k6, nên ghi rõ đây là chỉ tiêu mục tiêu và cần bổ sung số đo thực nghiệm ở chương kiểm thử.
+b) Bảo mật:
+Tất cả API nghiệp vụ đều yêu cầu JWT hợp lệ (@jwt_required ()) và kiểm tra quyền theo role trước khi thao tác dữ liệu.
+Dẫn chứng mã nguồn: backend/app/routes/nhanvien.py, luong.py, compat.py đều dùng @jwt_required (); logic phân quyền nằm ở check_permission(...) và điều kiện kiểm tra role trong route.
+Ví dụ kiểm soát truy cập theo chủ thể: nhân viên không được xem chi tiết lương của người khác tại endpoint chi tiết lương theo id.
+c) Tính nhất quán:
+Khi thêm nhân viên, backend tạo bản ghi nhân sự (DB1) và đồng thời tạo bảng lương mặc định (DB2) trong cùng luồng xử lý; khi có lỗi sẽ rollback.
+Khi xóa mềm nhân viên, backend đồng bộ cập nhật trạng thái ở cả DB1 (NhanVien.TrangThai) và DB2 (BangLuong.TrangThai).
+Dẫn chứng mã nguồn: backend/app/routes/nhanvien.py (flush MaNV, tạo BangLuong, commit/rollback ở cả luồng create và delete).
+d) Khả năng mở rộng:
+Kiến trúc đang tách miền dữ liệu theo bind, giúp mở rộng thêm DB bằng cách khai báo bind mới, model mới, và route/service tương ứng mà không phá kiến trúc hiện tại.
+Dẫn chứng mã nguồn: backend/config.py (SQLALCHEMY_BINDS), backend/app/models/nhanvien.py (__bind_key__ = 'db1_nhansu'), backend/app/models/luong.py (__bind_key__ = 'db2_luong').
+2.4. Yêu cầu về phân tán CSDL
+Hệ thống phải đáp ứng 4 yêu cầu cốt lõi của CSDL phân tán:
+Phân mảnh dữ liệu (Fragmentation): Dữ liệu được phân chia theo chiều dọc giữa DB1_NHANSU và DB2_LUONG.
+Tính trong suốt (Transparency): Người dùng không cần biết dữ liệu lưu ở DB nào.
+Đồng bộ thao tác (Consistency/Sync): Thao tác thêm/xóa nhân viên phải cập nhật đồng thời cả hai DB.
+Phân quyền (Authorization): Mỗi role chỉ truy cập được dữ liệu thuộc phạm vi quyền hạn.
+1) Phân mảnh dữ liệu (Fragmentation)
+Hệ thống phân mảnh theo chiều dọc theo domain nghiệp vụ, không phải chia ngang theo bản ghi.
+DB1_NHANSU chỉ lưu dữ liệu nhân sự và tổ chức: NhanVien, PhongBan, ChucVu.
+DB2_LUONG chỉ lưu dữ liệu tiền lương: BangLuong, ChiTietLuongThang, BaoHiemConfig, LichSuThayDoiLuong, HopDongLuong.
+Liên kết logic giữa hai DB đi qua khóa NhanVienID (không dùng foreign key vật lý liên database trong MySQL).
+2) Tính trong suốt dữ liệu (Transparency)
+Người dùng và frontend không truy vấn trực tiếp từng DB; chỉ gọi API.
+Backend thực hiện "hợp nhất dữ liệu" theo 2 cách:
+Cách 1: View cross-DB (ví dụ vw_AdminNhanVienDayDu) để đọc dữ liệu tổng hợp một lần.
+Cách 2: API merge (đọc DB1 và DB2 riêng, ghép theo NhanVienID rồi trả về một JSON duy nhất).
+UI chỉ thấy một mô hình dữ liệu thống nhất, không cần biết bản ghi đến từ DB1 hay DB2.
+3) Đồng bộ thao tác (Consistency/Sync)
+Với các nghiệp vụ chạm cả 2 DB (thêm nhân viên, xóa mềm nhân viên), backend coi đây là một đơn vị công việc logic.
+Luồng thêm nhân viên:
+B1: Insert NhanVien vào DB1_NHANSU.
+B2: Insert BangLuong mặc định vào DB2_LUONG.
+B3: Nếu cả hai thành công thì commit; nếu một bước lỗi thì rollback để tránh lệch dữ liệu.
+Luồng xóa mềm:
+B1: Update NhanVien.TrangThai = 0 ở DB1.
+B2: Update BangLuong.TrangThai = 0 ở DB2.
+B3: Ghi nhận lịch sử thay đổi lương và hoàn tất giao dịch.
+4) Phân quyền (Authorization)
+Bảo mật theo 2 lớp:
+Lớp API: JWT + kiểm tra role trước khi xử lý nghiệp vụ.
+Lớp dữ liệu: quyền truy cập bảng/DB theo vai trò nghiệp vụ.
+Admin chủ yếu quản trị dữ liệu nhân sự và xem báo cáo tổng hợp.
+Kế toán tập trung thao tác dữ liệu lương.
+Nhân viên chỉ được xem dữ liệu của chính mình (lọc theo user_id trong token).
+5) Hai DB "giao tiếp" với nhau như thế nào trong thực tế?
+Hai DB không gọi trực tiếp nhau như service-to-service; chúng được điều phối bởi backend Flask.
+Backend đóng vai trò "orchestrator": điều phối ghi nhiều bước giữa DB1 và DB2, gom dữ liệu từ nhiều nguồn thành một response thống nhất, áp dụng rule nghiệp vụ và rule phân quyền trước khi trả dữ liệu.
+Ngoài backend, một số truy vấn đọc có thể dùng view cross-DB để tăng tính trong suốt khi báo cáo.
+6) Luồng tương tác chuẩn giữa 2 DB
+Luồng ghi (write path): Frontend -> API -> DB1 + DB2 -> commit/rollback -> API response.
+Luồng đọc (read path): Frontend -> API -> (DB1, DB2 hoặc view cross-DB) -> merge -> JSON trả về UI.
+CHƯƠNG 4: THIẾT KẾ KIẾN TRÚC + CSDL PHÂN TÁN + API + UI
+4.1. Kiến trúc tổng thể hệ thống
+Hệ thống được thiết kế theo kiến trúc 3 lớp với 2 cơ sở dữ liệu phân tán:
+[Web Frontend] <-> [Flask API Backend] <-> [DB1_NHANSU] + [DB2_LUONG]
+Bảng 4.1. Mô tả kiến trúc 3 lớp của hệ thống
+Lớp
+Thành phần
+Vai trò
+Presentation Layer
+Web Frontend (HTML/CSS/JS)
+Giao diện người dùng, gọi API qua api-client.js
+Business Logic Layer
+Flask Backend + Routes + Services
+Xử lý nghiệp vụ, xác thực JWT, merge dữ liệu cross-DB
+Data Layer
+MySQL DB1_NHANSU
+Lưu trữ dữ liệu nhân sự
+Data Layer
+MySQL DB2_LUONG
+Lưu trữ dữ liệu tiền lương
+Hình 4.1. Sơ đồ kiến trúc tổng thể hệ thống
+4.2. Kiến trúc phân mảnh CSDL
+Hình 4.2. Sơ đồ phân mảnh CSDL
+Hình 4.3. Sơ đồ quan hệ giữa hai CSDL
+4.2.1. DB1_NHANSU - Cơ sở dữ liệu Nhân sự
+DB1_NHANSU lưu trữ toàn bộ dữ liệu thuộc miền nhân sự. Lý do tách: dữ liệu nhân sự có tần suất đọc cao, ít thay đổi, cần bảo mật riêng biệt với dữ liệu tài chính.
+Bảng 4.2. Các bảng trong DB1_NHANSU
+Bảng
+Mô tả
+Cột chính
+NhanVien
+Thông tin nhân viên
+NhanVienID, HoTen, NgaySinh, GioiTinh, PhongBanID, ChucVuID, TrangThai
+PhongBan
+Danh mục phòng ban
+PhongBanID, TenPhongBan, MoTa
+ChucVu
+Danh mục chức vụ
+ChucVuID, TenChucVu, MoTa
+4.2.2. DB2_LUONG - Cơ sở dữ liệu Tiền lương
+DB2_LUONG lưu trữ toàn bộ dữ liệu thuộc miền tài chính - tiền lương. Lý do tách: dữ liệu lương có tính nhạy cảm cao, cần phân quyền chặt chẽ, tần suất ghi cao hàng tháng.
+Bảng 4.3. Các bảng trong DB2_LUONG
+Bảng
+Mô tả
+Cột chính
+BangLuong
+Mức lương cơ bản NV
+BangLuongID, NhanVienID, LuongCoBan, PhuCap, TrangThai
+ChiTietLuongThang
+Chi tiết lương từng tháng
+ChiTietID, NhanVienID, Thang, Nam, LuongThucLinh
+BaoHiemConfig
+Cấu hình tỉ lệ bảo hiểm
+ConfigID, TyLeBHXH, TyLeBHYT, TyLeBHTN, HieuLuc
+LichSuThayDoiLuong
+Lịch sử thay đổi lương
+LichSuID, NhanVienID, LuongCu, LuongMoi, NgayThayDoi
+HopDongLuong
+Hợp đồng lương
+HopDongID, NhanVienID, NgayBatDau, NgayKetThuc, LuongHopDong
+4.2.3. Lý do tách domain dữ liệu
+Nguyên tắc phân tách trách nhiệm: Dữ liệu nhân sự và tài chính có vòng đời khác nhau.
+Bảo mật: Kế toán chỉ cần truy cập DB2, không cần toàn quyền trên DB1.
+Hiệu năng: Tách biệt tải truy vấn, DB2 có thể scale độc lập khi cần.
+Tuân thủ nguyên tắc CSDL phân tán: phân mảnh theo chiều dọc (vertical fragmentation).
+4.3. Tính trong suốt dữ liệu (Transparency)
+Hình 4.4. Sơ đồ tính trong suốt dữ liệu
+4.3.1. View cross-database: vw_AdminNhanVienDayDu
+View này kết hợp dữ liệu từ DB1_NHANSU (thông tin nhân viên) và DB2_LUONG (mức lương) để hiển thị thông tin đầy đủ cho Admin mà không cần biết dữ liệu lưu ở DB nào.
+CREATE VIEW vw_AdminNhanVienDayDu AS
+SELECT nv.NhanVienID, nv.HoTen, nv.Email,
+pb.TenPhongBan, cv.TenChucVu,
+bl.LuongCoBan, bl.PhuCap
+FROM DB1_NHANSU.NhanVien nv
+JOIN DB1_NHANSU.PhongBan pb ON nv.PhongBanID = pb.PhongBanID
+JOIN DB1_NHANSU.ChucVu cv ON nv.ChucVuID = cv.ChucVuID
+LEFT JOIN DB2_LUONG.BangLuong bl ON nv.NhanVienID = bl.NhanVienID;
+4.3.2. Transparency ở tầng API
+Backend merge dữ liệu từ DB1 và DB2 trước khi trả về cho frontend. Frontend chỉ nhận một JSON duy nhất, không cần biết dữ liệu đến từ nhiều nguồn.
+GET /api/nhanvien/{id}: Backend lấy thông tin nhân viên từ DB1_NHANSU; dữ liệu lương tra cứu qua các endpoint /api/luong/*.
+GET /api/statistics: Backend đếm NV từ DB1, tính tổng quỹ lương từ DB2, trả về JSON thống kê tổng hợp.
+GET /api/luong/danh-sach: Backend join dữ liệu DB1 (họ tên, phòng ban) với DB2 (mức lương) qua NhanVienID.
+4.4. Đồng bộ thao tác (Consistency/Sync)
+4.4.1. Luồng thêm nhân viên
+Nhận request thêm NV từ frontend.
+BEGIN TRANSACTION trên cả DB1 và DB2.
+INSERT INTO DB1_NHANSU.NhanVien - lấy NhanVienID mới.
+INSERT INTO DB2_LUONG.BangLuong với NhanVienID, LuongCoBan = 0, TrangThai = 1.
+Nếu cả hai thành công: COMMIT.
+Nếu bất kỳ bước nào lỗi: ROLLBACK cả hai, trả về lỗi 500.
+4.4.2. Luồng xóa mềm nhân viên
+Nhận request xóa NV từ Admin.
+UPDATE DB1_NHANSU.NhanVien SET TrangThai = 0 WHERE NhanVienID = ?
+UPDATE DB2_LUONG.BangLuong SET TrangThai = 0 WHERE NhanVienID = ?
+Ghi nhận LichSuThayDoiLuong với ghi chú 'Nhân viên nghỉ việc'.
+Nếu lỗi: ROLLBACK, giữ nguyên trạng thái cũ.
+4.5. Cấu hình SQLAlchemy Binds
+Backend sử dụng SQLAlchemy BINDS để quản lý kết nối đến hai cơ sở dữ liệu một cách trong suốt:
+# backend/config.py
+SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://user:pass@localhost/DB1_NHANSU'
+SQLALCHEMY_BINDS = {
+'db1_nhansu': 'mysql+pymysql://user:pass@localhost/DB1_NHANSU',
+'db2_luong':  'mysql+pymysql://user:pass@localhost/DB2_LUONG'
+}
+4.6. Bảo mật và Phân quyền
+4.6.1. Vai trò và quyền hạn
+Bảng 4.4. Phân quyền theo vai trò
+Vai trò
+DB1_NHANSU
+DB2_LUONG
+API được phép
+Admin
+Toàn quyền SELECT, INSERT, UPDATE
+Chỉ SELECT
+/api/nhanvien, /api/phongban, /api/chucvu, /api/statistics
+Kế toán
+Chỉ SELECT NhanVien
+Toàn quyền SELECT, INSERT, UPDATE
+/api/luong, /api/luong/danh-sach, /api/luong/chi-tiet
+Nhân viên
+SELECT bản thân
+SELECT lương bản thân
+/api/nhanvien/{id}, /api/luong/chi-tiet/{id}
+4.6.2. JWT Authentication
+Token được tạo khi đăng nhập thành công với thông tin {user_id, role, exp}.
+Mỗi request API phải có header: Authorization: Bearer <jwt_token>.
+Backend decode token, kiểm tra role trước khi thực thi business logic.
+Token hết hạn theo cấu hình backend (hiện tại 24 giờ), cần đăng nhập lại khi hết hạn.
+4.6.3. SQL Grants phân quyền DB
+-- Script DB1 - Phân quyền
+GRANT SELECT ON DB1_NHANSU.* TO 'user_nhanvien'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON DB1_NHANSU.* TO 'user_ketoan'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON DB2_LUONG.* TO 'user_ketoan'@'localhost';
+4.7. API Contract
+Bảng 4.5. Danh sách API Contract
+Endpoint
+Method
+Vai trò
+Bảng tác động
+/api/auth/login
+POST
+Tất cả
+NhanVien (DB1)
+/api/statistics
+GET
+Admin, Kế toán
+NhanVien (DB1) + BangLuong (DB2)
+/api/nhanvien
+GET
+Admin, Kế toán
+NhanVien, PhongBan, ChucVu (DB1)
+/api/nhanvien
+POST
+Admin
+NhanVien (DB1) + BangLuong (DB2)
+/api/nhanvien/{id}
+PUT
+Admin
+NhanVien (DB1)
+/api/nhanvien/{id}
+DELETE
+Admin
+NhanVien (DB1) + BangLuong (DB2)
+/api/phongban
+GET/POST/PUT
+Admin
+PhongBan (DB1)
+/api/chucvu
+GET/POST/PUT
+Admin
+ChucVu (DB1)
+/api/luong
+GET/PUT
+Kế toán
+BangLuong (DB2)
+/api/luong/danh-sach
+GET
+Admin, Kế toán
+BangLuong (DB2) + NhanVien (DB1)
+/api/luong/chi-tiet
+GET/POST
+Kế toán, NV
+ChiTietLuongThang (DB2)
+4.8. Thiết kế giao diện (UI)
+Giao diện web được xây dựng theo nguyên tắc Single Page Application, sử dụng HTML/CSS/JavaScript thuần với module api-client.js xử lý tất cả giao tiếp với backend.
+Hình 4.5. Sơ đồ luồng Frontend - Backend
+4.8.1. Luồng Frontend -> Backend
+Người dùng thao tác trên giao diện (dashboard.js, nhanvien.js, luong.js).
+Các module gọi hàm trong api-client.js với endpoint và dữ liệu tương ứng.
+api-client.js tự động đính kèm JWT token vào header Authorization.
+Nhận response JSON, cập nhật giao diện.
+4.8.2. Các màn hình chính
+Trang đăng nhập: Form username/password, gọi /api/auth/login.
+Dashboard: Hiển thị thống kê (tổng NV, tổng quỹ lương tháng, NV mới tháng này).
+Danh sách nhân viên: Bảng có filter/search, nút thêm/sửa/xóa.
+Chi tiết nhân viên: Form hiển thị và chỉnh sửa thông tin NV + bảng lương.
+Bảng lương: Danh sách mức lương theo phòng ban, tháng.
+Phiếu lương: Chi tiết tính toán lương tháng của từng NV.
+CHƯƠNG 6: KIỂM THỬ VÀ ĐÁNH GIÁ THEO 4 YÊU CẦU ĐỀ BÀI
+6.1. Tiêu chí kiểm thử
+Hệ thống được kiểm thử theo 4 yêu cầu cốt lõi của CSDL phân tán: Phân mảnh, Trong suốt, Đồng bộ và Phân quyền.
+6.2. Test Case - Phân mảnh dữ liệu
+Bảng 6.1. Test Case kiểm thử phân mảnh dữ liệu
+TC
+Mô tả
+Input
+Expected Output
+Kết quả
+TC01
+Xác nhận NhanVien chỉ có trong DB1
+SHOW TABLES IN DB1_NHANSU
+Có bảng NhanVien, PhongBan, ChucVu
+Pass
+TC02
+Xác nhận BangLuong chỉ có trong DB2
+SHOW TABLES IN DB2_LUONG
+Có bảng BangLuong, ChiTietLuongThang
+Pass
+TC03
+DB2 không chứa bảng NhanVien
+SELECT * FROM DB2_LUONG.NhanVien
+Error: Table not found
+Pass
+TC04
+DB1 không chứa bảng BangLuong
+SELECT * FROM DB1_NHANSU.BangLuong
+Error: Table not found
+Pass
+6.3. Test Case - Tính trong suốt
+Bảng 6.2. Test Case kiểm thử tính trong suốt dữ liệu
+TC
+Mô tả
+Input
+Expected Output
+Kết quả
+TC05
+View cross-DB trả dữ liệu đúng
+SELECT * FROM vw_AdminNhanVienDayDu
+Dữ liệu NV kèm LuongCoBan
+Pass
+TC06
+API merge DB1+DB2 trong suốt
+GET /api/statistics hoặc GET /api/luong/danh-sach?thang=2&nam=2026
+JSON trả dữ liệu tổng hợp từ DB1 + DB2
+Pass
+TC07
+Frontend không biết dữ liệu từ DB nào
+Xem chi tiết NV trên UI
+Hiển thị đầy đủ thông tin
+Pass
+TC08
+Dashboard thống kê cross-DB
+GET /api/statistics
+Tổng NV (DB1) + Tổng quỹ lương (DB2)
+Pass
+6.4. Test Case - Đồng bộ thao tác
+Bảng 6.3. Test Case kiểm thử đồng bộ thao tác
+TC
+Mô tả
+Input
+Expected Output
+Kết quả
+TC09
+Thêm NV tạo BangLuong tự động
+POST /api/nhanvien {HoTen: 'Test'}
+NV trong DB1 + BangLuong mặc định trong DB2
+Pass
+TC10
+Xóa NV cập nhật cả hai DB
+DELETE /api/nhanvien/1
+TrangThai=0 trong DB1 và DB2.BangLuong
+Pass
+TC11
+Lỗi DB2: rollback DB1
+Giả lập lỗi khi INSERT BangLuong
+NhanVien không được tạo, DB1 rollback
+Pass
+TC12
+Lỗi DB1: rollback toàn bộ
+Giả lập lỗi khi INSERT NhanVien
+Không có bản ghi nào được tạo
+Pass
+6.5. Test Case - Phân quyền
+Bảng 6.4. Test Case kiểm thử phân quyền
+TC
+Mô tả
+Input
+Expected Output
+Kết quả
+TC13
+Admin truy cập API nhân viên
+GET /api/nhanvien (token Admin)
+200 OK - danh sách NV
+Pass
+TC14
+NhanVien không xem lương người khác
+GET /api/luong/chi-tiet/id/999 (token NV)
+403 Forbidden
+Pass
+TC15
+Kế toán không xóa được NV
+DELETE /api/nhanvien/1 (token Ketoan)
+403 Forbidden
+Pass
+TC16
+Không có token: từ chối
+GET /api/nhanvien (no token)
+401 Unauthorized
+Pass
+TC17
+Token hết hạn: từ chối
+GET /api/nhanvien (expired token)
+401 Token expired
+Pass
+6.6. Phân công công việc
+Bảng 6.5. Phân công công việc nhóm
+STT
+Thành viên
+Mã SV
+Nhiệm vụ
+Tiến độ
+1
+Nguyễn Hoàng Tín
+3123411036
+Thiết kế DB1_NHANSU, backend routes nhân sự, JWT auth
+100%
+2
+Nguyễn Thanh Bình
+3123411036
+Thiết kế DB2_LUONG, backend routes tiền lương, tính lương
+100%
+3
+Dương Nhiên Phong
+3123411223
+Xây dựng API layer, kết nối 2 Database, business logic và chạy test case
+100%
+4
+Võ Anh Hào
+3123411087
+Web frontend, api-client.js, dashboard, giao diện nhân viên
+100%
+5
+Bùi Minh Ngọc
+3123411198
+Kiểm thử tích hợp, tổng hợp báo cáo và chuẩn hóa tài liệu
+100%
+CHƯƠNG 7: KẾT LUẬN, ƯU ĐIỂM, HẠN CHẾ, HƯỚNG PHÁT TRIỂN
+7.1. Kết quả đạt được
+Sau quá trình nghiên cứu và xây dựng, hệ thống Quản lý Nhân sự - Tiền lương Phân tán đã hoàn thành các mục tiêu đề ra:
+Xây dựng thành công kiến trúc CSDL phân tán với 2 database độc lập (DB1_NHANSU và DB2_LUONG) theo nguyên tắc phân mảnh dọc.
+Thực hiện tính trong suốt dữ liệu thông qua view cross-DB và tầng API merge dữ liệu.
+Đảm bảo đồng bộ thao tác với cơ chế transaction và rollback khi thêm/xóa nhân viên.
+Xây dựng hệ thống phân quyền 3 cấp (Admin, Kế toán, Nhân viên) bằng JWT.
+Hoàn thành giao diện web frontend với đầy đủ các chức năng quản lý nhân sự và tiền lương.
+7.2. Ưu điểm của hệ thống
+Kiến trúc phân tán rõ ràng: Tách biệt rõ domain nhân sự và tài chính, dễ bảo trì.
+Bảo mật cao: JWT authentication kết hợp SQL grants phân quyền nhiều lớp.
+Tính trong suốt tốt: Người dùng không cần quan tâm đến cấu trúc CSDL phía sau.
+Đồng bộ đáng tin cậy: Cơ chế transaction đảm bảo tính nhất quán dữ liệu.
+Khả năng mở rộng: Có thể thêm DB3 (chẳng hạn DB3_CHAMCONG) mà không ảnh hưởng hệ thống hiện tại.
+7.3. Hạn chế
+Chưa xử lý distributed transaction hoàn toàn: Việc đồng bộ giữa DB1 và DB2 được xử lý ở tầng application, chưa dùng 2-Phase Commit chuẩn.
+Chưa có cơ chế failover: Nếu một DB bị lỗi, toàn bộ tính năng liên quan bị ảnh hưởng.
+Hiệu năng cross-DB query: Một số truy vấn phức tạp phải thực hiện nhiều round-trip đến hai DB.
+Chưa có audit log đầy đủ: Chưa ghi nhận mọi thao tác đọc ghi của người dùng.
+7.4. Hướng phát triển
+Áp dụng Saga Pattern hoặc 2-Phase Commit để xử lý distributed transaction chuẩn hóa hơn.
+Thêm module DB3_CHAMCONG quản lý chấm công, tích hợp tính lương theo ngày công.
+Xây dựng tính năng thông báo real-time khi bảng lương được cập nhật.
+Thêm chức năng xuất báo cáo PDF (phiếu lương, bảng lương phòng ban).
+Cải thiện hiệu năng bằng caching layer (Redis) cho các truy vấn thống kê.
+Mở rộng phân quyền chi tiết hơn (field-level security cho dữ liệu lương nhạy cảm).
